@@ -86,8 +86,8 @@ const plot = async () => {
         const ban = parseFloat(champ["ban %"].replace(/[^0-9.]/g, ''));
         const win = parseFloat(champ["win %"].replace(/[^0-9.]/g, ''));
         const kda = parseFloat(champ["kda"].replace(/[^0-9.]/g, ''));
-        const score = parseFloat(champ["score"].replace(/[^0-9.]/g, ''));
-        const stats = [pick, ban, win, kda, score];
+        // const score = parseFloat(champ["score"].replace(/[^0-9.]/g, ''));
+        const stats = [pick, ban, win-50, kda, pick];
 
         return stats;
     } 
@@ -121,7 +121,8 @@ const Radar = () => {
                     {
                         type: 'scatterpolar',
                         r: data,
-                        theta: ['Pick','Ban','Win','KDA','Score','Pick'],
+                        // theta: ['Pick','Ban','Win','KDA','Score','Pick'],
+                        theta: ['Pick','Ban','Win','KDA','Pick'],
                         fill: 'toself'
                     }
                 ]}
