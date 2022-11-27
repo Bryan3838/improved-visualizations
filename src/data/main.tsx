@@ -1,7 +1,7 @@
 import { GLOBAL } from "./types/avg/GLOBAL";
 
 //Name of the files
-const namesFiles = [
+export const namesFiles = [
     'League of Legends Champion Stats 12.1',
     'League of Legends Champion Stats 12.2',
     'League of Legends Champion Stats 12.3',
@@ -117,6 +117,6 @@ export const orderData = async () => {
 
         dataFiltered.push(item);
     }
-    console.log(dataFiltered);
+    //console.log(dataFiltered);
     return dataFiltered;
 };
