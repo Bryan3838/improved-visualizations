@@ -16,6 +16,11 @@ interface Props {
     OnChange(championId: string): void;
 }
 
+interface ChartDataElement {
+    roles: Map<string, ScatterDataPoint[]>;
+    pointStyle: PointStyle;
+}
+
 const ScatterPlot: React.FC<Props> = (props) => {
     const emptyDatasets: ChartData<"scatter"> = {
         datasets: [],
@@ -28,48 +33,58 @@ const ScatterPlot: React.FC<Props> = (props) => {
     ChartJS.register(...registerables);
 
     useEffect(() => {
-        const dataset: ScatterDataPoint[] = [];
-
+        const ChampionRoleData = new Map<string, ChartDataElement>();
+        
         const patchData = DataFiles.get(props.Patch)!;
-        const pointStyles: PointStyle[] = [];
         patchData.forEach((data, name) => {
             const id = Champions.get(name)!;
             const image = new Image(50, 50);
             image.src = `http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
-            pointStyles.push(image);
+            let chartDataPoint = {
+                roles: new Map<string, ScatterDataPoint[]>(),
+                pointStyle: image,
+            };
+            ChampionRoleData.set(id, chartDataPoint);
+
+            for (const championData of data) {
+                const dataPoint: ScatterDataPoint = {
+                    x: championData.pickRate,
+                    y: championData.winRate,
+                }
+                
+                const existingRole = chartDataPoint.roles.get(championData.role);
+                if (existingRole) {
+                    existingRole.push(dataPoint);
+                } else {
+                    chartDataPoint.roles.set(championData.role, [dataPoint]);
+                }
+            }
         });
 
-        
-        for (let i = 0; i < 20; i++) {
-            const dataPoint: ScatterDataPoint = {
-                x: Math.random() * 10,
-                y: Math.random() * 10,
-            };
-            dataset.push(dataPoint);
-        }
-
         const datasets: ChartData<"scatter"> = {
-            datasets: [{
-                label: "test",
-                data: dataset,
-                backgroundColor: `rgba(255, 99, 132, 0.5)`,
-            }]
+            datasets: [],
         };
+        
+        // ChampionRoleData.forEach((element, champion) => {
+        //     element.roles.forEach((dataPoints, role) => {
+        //         const dataset = datasets.datasets.find(set => {
+        //             return set.label === role;
+        //         });
+        //         if (!dataset) {
+        //             datasets.push({
+        //                 role
+        //             })
+        //         }
+        //     });
+        // });
+        console.log(ChampionRoleData);
+       
         const options: ChartOptions<"scatter"> = {
             elements: {
                 point: {
-                    pointStyle: pointStyles,
                     hoverRadius: 50,
                 },
             },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                },
-                y: {
-                    beginAtZero: true,
-                },
-            }
         }
         setData({ datasets: datasets, options: options});
     }, [props.Patch]);

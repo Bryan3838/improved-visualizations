@@ -226,10 +226,10 @@ export const loadData = async () => {
                             tier: String(data[l++]),
                             score: String(data[l++]),
                             trend: String(data[l++]),
-                            "win %": String(data[l++]),
-                            "role %": String(data[l++]),
-                            "pick %": String(data[l++]),
-                            "ban %": String(data[l++]),
+                            winRate: Number(data[l++].replace("%", "")),
+                            rolePickRate: Number(data[l++].replace("%", "")),
+                            pickRate: Number(data[l++].replace("%", "")),
+                            banRate: Number(data[l++].replace("%", "")),
                             kda: String(data[l++])
                         }
                         
