@@ -1,5 +1,6 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
+import Radar from './components/Radar';
 import ScatterPlot from './components/ScatterPlot';
 import { namesFiles } from './data/main';
 
@@ -42,6 +43,8 @@ const App: React.FC<Props> = (props) => {
           }}
         />
         {/* <Radar/> */}
+
+        <Radar Patch={patch} Champion={championId}/>
             
         </div>
     </div>

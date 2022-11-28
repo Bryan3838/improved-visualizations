@@ -1,5 +1,5 @@
-// import Plot from "react-plotly.js"
-// import { useState } from "react"
+import Plot from "react-plotly.js"
+import React, { useState } from "react"
 // import { getChamps } from "./Filters"
 
 // const getStats = async () => {
@@ -62,3 +62,29 @@
 // }
 
 // export default Radar;
+
+interface Props {
+    Patch: string;
+    Champion: string;
+}
+
+const Radar: React.FC<Props> = (props) => {
+    return (
+      <div>
+        <Plot
+          data = {[
+            {
+              type: 'scatterpolar',
+              r: [12,24,25,17,12],
+              // theta: ['Pick','Ban','Win','KDA','Score','Pick'],
+              theta: ['Pick','Ban','Win','KDA','Pick'],
+              fill: 'toself'
+            }
+          ]}
+          layout = {{width: 800, height: 500}}
+        />
+      </div>
+    )
+}
+
+export default Radar;
