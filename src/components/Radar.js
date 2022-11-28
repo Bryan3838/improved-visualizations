@@ -1,71 +1,8 @@
-import { orderData, namesFiles } from "../data/main";
 import Plot from "react-plotly.js"
 import { useState } from "react"
+import { getChamps } from "./Filters"
 
-export const generatePatches = () => {
-
-    // Get selected patch
-    const select = document.getElementById("selectPatch");
-    // Create default option
-    select.innerHTML = '';
-    const el = document.createElement("option");
-    el.textContent = 'Choose a patch';
-    el.value = '';
-    select.appendChild(el);
-    // Create option tag for every patch file
-    for(let i = 0; i < namesFiles.length; i++) {
-        const opt = namesFiles[i].replace(/[^0-9.]/g, '');
-        const el = document.createElement("option");
-        el.textContent = opt;
-        el.value = i;
-        select.appendChild(el);
-    }
-}
-
-const getChamps = async () => {
-    
-    // Get champion data
-    const data = await orderData();
-    // Get unique list of champions for the selected patch
-    const e = document.getElementById("selectPatch");
-    const patch = e.value;
-    const patchName = "League of Legends Champion Stats".concat(" ", e.options[e.selectedIndex].text);
-    // Get JSON of all champions data
-    const champs = data[patch][patchName].champions;
-
-    return champs
-}
-
-const generateChamps = async () => {
-    
-    const e = document.getElementById("selectPatch");
-    if (e.value !== '') {
-
-        const champs = await getChamps();
-        const uniqueChamps = [...new Set(Object.keys(champs))];
-    
-        console.log(uniqueChamps.length);
-
-        // Get selected champion
-        const select = document.getElementById("selectChampion");
-        // Create default option
-        select.innerHTML = '';
-        const el = document.createElement("option");
-        el.textContent = 'Choose a champion';
-        el.value = '';
-        select.appendChild(el);
-        // Create option tag for every champ in that patch
-        for(let i = 0; i < uniqueChamps.length; i++) {
-            const opt = uniqueChamps[i];
-            const el = document.createElement("option");
-            el.textContent = opt;
-            el.value = opt;
-            select.appendChild(el);
-        }
-    }
-}
-
-const plot = async () => {
+const getStats = async () => {
     
     const selectChampion = document.getElementById("selectChampion");
     const selectPatch = document.getElementById("selectPatch");
@@ -93,29 +30,18 @@ const plot = async () => {
     } 
 }
 
-
 const Radar = () => {
     
     const [data, setData] = useState([]);
 
     const dataHandler = async (event) => {
-        const stats = await plot();
-        console.log(stats);
+        const stats = await getStats();
         setData(stats);
     }
 
     return (
         <div>           
-            <select id="selectPatch" onChange={() => generateChamps()}>
-                <option>Choose a patch</option>
-            </select>
-
-            <select id="selectChampion" onChange={dataHandler}>
-                <option>Choose a champion</option>
-            </select>
-
             <h1 id="selectedChampion">Select a champion</h1>
-
             <Plot
                 data={[
                     {
@@ -128,7 +54,8 @@ const Radar = () => {
                 ]}
                 layout = {{width: 800, height: 500}}
             />
-            
+
+            <button type="button" onClick={dataHandler}>Redraw</button>
 
         </div>
     );
