@@ -2,6 +2,7 @@ import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ScatterPlot from './components/ScatterPlot';
 import { DataFiles, loadData, patchFiles } from './data/main';
+import RadarChart from './components/RadarChart'
 
 enum Status {
   LOADING,
@@ -14,7 +15,7 @@ interface Props {
 }
 
 const App: React.FC<Props> = (props) => {
-  const [championId, setChampionId] = useState("Ahri");
+  const [championId, setChampionId] = useState("Akali");
   const [patch, setPatch] = useState(patchFiles[patchFiles.length - 1]);
   const [status, setStatus] = useState(Status.LOADING);
   
@@ -71,9 +72,8 @@ const App: React.FC<Props> = (props) => {
                 setChampionId(championIdSP);
               }}
             />
-            {/* <Radar/> */}
 
-            {/* <Radar Patch={patch} Champion={championId}/> */}
+            <RadarChart Patch={patch} Champion={championId}/>
                 
             </div>
         </div>
