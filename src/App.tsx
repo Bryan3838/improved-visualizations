@@ -14,7 +14,7 @@ interface Props {
 }
 
 const App: React.FC<Props> = (props) => {
-  // const [championId, setChampionId] = useState("Ahri");
+  const [championId, setChampionId] = useState("Ahri");
   const [patch, setPatch] = useState(patchFiles[patchFiles.length - 1]);
   const [status, setStatus] = useState(Status.LOADING);
   
