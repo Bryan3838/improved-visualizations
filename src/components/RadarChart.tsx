@@ -29,20 +29,13 @@ const RadarChart: React.FC<Props> = (props) => {
 
       const obj: AnyObject = {}
 
-      // const name = champion.name;
-      // const win = champion["win %"];
-      // const pos = champion.role;
-      // const role = champion["role %"];
-      // const pick = champion["pick %"];
-      // const ban = champion["ban %"];
-      // const kda = champion.kda;
-
       const name = champion.name;
+      const win = champion.winRate;
       const pos = champion.role;
-      const win = parseFloat(champion["win %"].replace(/[^0-9.]/g, ''));
-      const pick = parseFloat(champion["pick %"].replace(/[^0-9.]/g, ''));
-      const ban = parseFloat(champion["ban %"].replace(/[^0-9.]/g, ''));
-      const kda = parseFloat(champion.kda.replace(/[^0-9.]/g, ''));
+      // const role = champion.rolePickRate;
+      const pick = champion.pickRate;
+      const ban = champion.banRate;
+      const kda = champion.kda;
 
       const stats = [ban, pick, win-50, kda]      
       obj.label = name.concat(" ", pos);
