@@ -1,54 +1,84 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import React, { useState } from 'react';
-import Radar from './components/Radar';
+import React, { useEffect, useState } from 'react';
 import ScatterPlot from './components/ScatterPlot';
-import { namesFiles } from './data/main';
+import { DataFiles, loadData, patchFiles } from './data/main';
+
+enum Status {
+  LOADING,
+  SUCCESS,
+  ERROR,
+}
 
 interface Props {
 
 }
 
 const App: React.FC<Props> = (props) => {
-  const [championId, setChampionId] = useState("Ahri");
-  const [patch, setPatch] = useState(namesFiles[namesFiles.length]);
+  // const [championId, setChampionId] = useState("Ahri");
+  const [patch, setPatch] = useState(patchFiles[patchFiles.length - 1]);
+  const [status, setStatus] = useState(Status.LOADING);
+  
+  useEffect(() => {
+    loadData()
+      .then(data => {
+        console.log("DATAFILES:");
+        console.log(DataFiles);
+        setStatus(Status.SUCCESS);
+      })
+      .catch(error => {
+        console.log(error);
+        setStatus(Status.ERROR);
+      });
+  }, []);
 
-  return (
-    <div className="App">
-      <div>
-        <div>
-          <h1>Select Patch</h1>
-          <Select
-            labelId="patch-ids-label"
-            id="patch-ids"
-            value={namesFiles[namesFiles.length - 1]}
-            onChange={(event: SelectChangeEvent) => {
-                setPatch(event.target.value);
-            }}
-          >
-            {namesFiles.map((fileName) => (
-              <MenuItem
-                key={fileName}
-                value={fileName}
+  switch (status) {
+    case Status.LOADING:
+      return (
+        <div>LOADING</div>
+      );
+    case Status.ERROR:
+      return (
+        <div>ERROR</div>
+      );
+    case Status.SUCCESS:
+      return (
+        <div className="App">
+          <div>
+            <div>
+              <h1>Select Patch</h1>
+              <Select
+                labelId="patch-ids-label"
+                id="patch-ids"
+                value={patch}
+                onChange={(event: SelectChangeEvent) => {
+                    setPatch(event.target.value);
+                }}
               >
-                {fileName}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-        
-        <ScatterPlot
-          Patch={patch}
-          OnChange={championIdSP => {
-            setChampionId(championIdSP);
-          }}
-        />
-        {/* <Radar/> */}
-
-        <Radar Patch={patch} Champion={championId}/>
+                {patchFiles.map((fileName) => (
+                  <MenuItem
+                    key={fileName}
+                    value={fileName}
+                  >
+                    {fileName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
             
+            <ScatterPlot
+              Patch={patch}
+              OnChange={championIdSP => {
+                setChampionId(championIdSP);
+              }}
+            />
+            {/* <Radar/> */}
+
+            {/* <Radar Patch={patch} Champion={championId}/> */}
+                
+            </div>
         </div>
-    </div>
-  );
+      );
+  }
 }
 
 export default App;

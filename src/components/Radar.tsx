@@ -1,5 +1,5 @@
-import Plot from "react-plotly.js"
-import React, { useState } from "react"
+// import Plot from "react-plotly.js"
+// import React from "react"
 // import { getChamps } from "./Filters"
 
 // const getStats = async () => {
@@ -71,7 +71,7 @@ interface Props {
 const Radar: React.FC<Props> = (props) => {
     return (
       <div>
-        <Plot
+        {/* <Plot
           data = {[
             {
               type: 'scatterpolar',
@@ -82,7 +82,7 @@ const Radar: React.FC<Props> = (props) => {
             }
           ]}
           layout = {{width: 800, height: 500}}
-        />
+        /> */}
       </div>
     )
 }
