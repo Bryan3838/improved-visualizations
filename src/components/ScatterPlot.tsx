@@ -8,7 +8,7 @@ import {
     ScatterDataPoint,
 } from 'chart.js';
 import { Scatter } from "react-chartjs-2";
-import { Champions, DataFiles } from "../data/main";
+import { Champions, DataFiles } from "../data/data";
 import { useState } from "react";
 
 interface Props {
@@ -20,6 +20,8 @@ interface ChartDataElement {
     roles: Map<string, ScatterDataPoint[]>;
     pointStyle: PointStyle;
 }
+
+const IMAGE_SIZE = 35;
 
 const ScatterPlot: React.FC<Props> = (props) => {
     const emptyDatasets: ChartData<"scatter"> = {
@@ -38,7 +40,7 @@ const ScatterPlot: React.FC<Props> = (props) => {
         const patchData = DataFiles.get(props.Patch)!;
         patchData.forEach((data, name) => {
             const id = Champions.get(name)!;
-            const image = new Image(50, 50);
+            const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
             image.src = `http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
             let chartDataPoint = {
                 roles: new Map<string, ScatterDataPoint[]>(),
@@ -49,7 +51,7 @@ const ScatterPlot: React.FC<Props> = (props) => {
             for (const championData of data) {
                 const dataPoint: ScatterDataPoint = {
                     x: championData.pickRate,
-                    y: championData.winRate,
+                    y: championData.winRate-50,
                 }
                 
                 const existingRole = chartDataPoint.roles.get(championData.role);
@@ -61,36 +63,68 @@ const ScatterPlot: React.FC<Props> = (props) => {
             }
         });
 
+        // const datasets: ChartData<"scatter"> = {
+        //     datasets: [],
+        // };
         const datasets: ChartData<"scatter"> = {
-            datasets: [],
+            datasets: []
         };
-        
-        // ChampionRoleData.forEach((element, champion) => {
-        //     element.roles.forEach((dataPoints, role) => {
-        //         const dataset = datasets.datasets.find(set => {
-        //             return set.label === role;
-        //         });
-        //         if (!dataset) {
-        //             datasets.push({
-        //                 role
-        //             })
-        //         }
-        //     });
-        // });
-        console.log(ChampionRoleData);
+        ChampionRoleData.forEach((element, champion) => {
+            element.roles.forEach((dataPoints, role) => {
+                let dataset = datasets.datasets!.find(set => {
+                    return set.label === role;
+                });
+                if (!dataset) {
+                    datasets.datasets!.push({
+                        label: role,
+                        data: [],
+                        pointStyle: [],
+                    });
+                }
+                dataset = datasets.datasets!.find(set => {
+                    return set.label === role;
+                });
+                for (const point of dataPoints) {
+                    if (dataset!.label !== role) continue; 
+                    dataset!.data.push(point);
+                    // @ts-ignore
+                    dataset!.pointStyle!.push(element.pointStyle);
+                }
+            });
+        });
        
         const options: ChartOptions<"scatter"> = {
-            elements: {
-                point: {
-                    hoverRadius: 50,
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: "Win Delta",
+                    },
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: "Pick Rate %",
+                    },
                 },
             },
+            // elements: {
+            //     point: {
+            //         hoverRadius: 50,
+            //     },
+            // },
         }
         setData({ datasets: datasets, options: options});
     }, [props.Patch]);
 
     return (
-        <div>
+        <div
+            style={{
+                width: "75%",
+                height: "75%",
+                margin: "0 auto",
+            }}
+        >
             <Scatter
                 data={data.datasets}
                 options={data.options}

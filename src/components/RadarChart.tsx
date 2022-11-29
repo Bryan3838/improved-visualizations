@@ -1,4 +1,4 @@
-import { Champions, DataFiles } from "../data/main";
+import { Champions, DataFiles } from "../data/data";
 import {
   Chart as ChartJS,
   RadialLinearScale,
