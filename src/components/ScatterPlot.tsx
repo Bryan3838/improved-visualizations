@@ -201,7 +201,7 @@ const ScatterPlot: React.FC<Props> = (props) => {
                 margin: "0 auto",
             }}
         >
-            <h1>Champion Balancing Matrix by Patch</h1>
+            <h1>WIN DELTA PER CHAMPION VS. PRESENCE BY PATCH</h1>
             <Scatter
                 data={data.datasets}
                 options={data.options}
