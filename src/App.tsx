@@ -77,7 +77,13 @@ const App: React.FC<Props> = (props) => {
             flexItem
           /> 
           
-          <div>
+          <div
+            style={{
+                width: "75%",
+                height: "75%",
+                margin: "0 auto",
+            }}
+          >
             <h1>Select Patch</h1>
             <Select
               labelId="patch-ids-label"
@@ -97,6 +103,12 @@ const App: React.FC<Props> = (props) => {
               ))}
             </Select>
           </div>
+
+          <Divider
+            variant="middle"
+            sx={{marginLeft: "5%", marginRight: "5%", marginTop: "20px", marginBottom: "20px"}}
+            flexItem
+          /> 
           
           <ScatterPlot
             Patch={patch}
