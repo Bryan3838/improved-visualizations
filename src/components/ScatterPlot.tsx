@@ -3,7 +3,6 @@ import {
     Chart as ChartJS,
     ChartData,
     ChartOptions,
-    PointStyle,
     registerables,
     ScatterDataPoint,
     Tick,
@@ -137,27 +136,38 @@ const ScatterPlot: React.FC<Props> = (props) => {
                 },
                 annotation: {
                     annotations: {
-                        line1: {
+                        idealWinDeltaLine: {
                             type: "line",
                             yMin: 0,
                             yMax: 0,
                             borderColor: "rgba(255, 99, 132, 0.5)",
                             borderWidth: 2,
-                            drawTime: "beforeDatasetsDraw",
+                            drawTime: "afterDatasetsDraw",
+                            label: {
+                                display: true,
+                                content: "Ideal Win Delta",
+                                backgroundColor: "rgba(255, 99, 132, 0.3)",
+                            }
                         },
-                        line2: {
+                        avgPresenceLine: {
                             type: "line",
                             xMin: avgPickRate,
                             xMax: avgPickRate,
                             borderColor: "rgba(255, 99, 132, 0.5)",
                             borderWidth: 2,
-                            drawTime: "beforeDatasetsDraw",
+                            drawTime: "afterDatasetsDraw",
+                            label: {
+                                display: true,
+                                content: "Average Presence",
+                                rotation: -90,
+                                backgroundColor: "rgba(255, 99, 132, 0.3)",
+                            }
                         },
                         label1: {
                             type: 'label',
                             position: {
-                                x: "center",
-                                y: "center",
+                                x: "start",
+                                y: "end",
                             },
                             content: ["test"],
                             font: {
@@ -169,15 +179,18 @@ const ScatterPlot: React.FC<Props> = (props) => {
                         }
                     }
                 }
+            },
+            onClick: function(evt, element) {
+                if(element.length > 0) {
+                    const datasetIndex = element[0].datasetIndex;
+                    const dataIndex = element[0].index;
+                    const championData = championDatasets.datasets[datasetIndex].data[dataIndex];
+                    props.OnChange(championData.name);
+                }
             }
-            // elements: {
-            //     point: {
-            //         hoverRadius: 50,
-            //     },
-            // },
         }
         setData({ datasets: datasets, options: options});
-    }, [props.Patch]);
+    }, [props, props.Patch]);
 
     return (
         <div

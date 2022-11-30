@@ -15,7 +15,7 @@ interface Props {
 }
 
 const App: React.FC<Props> = (props) => {
-  const [championId, setChampionId] = useState("Akali");
+  const [championId, setChampionId] = useState<string | undefined>();
   const [patch, setPatch] = useState(patchFiles[0]);
   const [status, setStatus] = useState(Status.LOADING);
   
@@ -72,8 +72,10 @@ const App: React.FC<Props> = (props) => {
               }}
             />
 
-            <RadarChart Patch={patch} Champion={championId}/>
-                
+            {championId ?
+              <RadarChart Patch={patch} Champion={championId}/> : <h1>Select a Champion</h1>
+            }
+            
             </div>
         </div>
       );
