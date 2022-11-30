@@ -246,39 +246,3 @@ export const loadData = async () => {
         DataFiles.set(patchFile, championMap);
     }
 }
-
-// export const orderData = async () => {
-//     const data = await loadData();
-//     const keysObject = Array.from(data.keys())
-//     const valuesObject = Array.from(data.values())
-//     const newArr = new Array;
-//     const dataFiltered = new Array;
-
-//     for (let index = 0; index < valuesObject.length; index++) {
-//         const element = valuesObject[index];
-//         newArr.push({"name_file": keysObject[index], "value_file": element})
-//     }
-
-//     for (let index = 0; index < newArr.length; index++) {
-//         const nameFile = newArr[index].name_file;
-//         const element = newArr[index].value_file;
-
-//         const champions:typeof element = {}
-//         const roles:typeof element = {}
-//         const item:typeof element = {}
-
-//         element.reduce((prev: any, curr: any) => {
-//             champions[curr.name] = element.filter((x: any) => x.name === curr.name)
-//         });
-
-//         element.reduce((prev: any, curr: any) => {
-//             roles[curr.role] = element.filter((x: any) => x.role === curr.role)
-//         });
-
-//         item[nameFile] = {"champions": champions, "roles": roles}
-
-//         dataFiltered.push(item);
-//     }
-    
-//     return dataFiltered;
-// };
