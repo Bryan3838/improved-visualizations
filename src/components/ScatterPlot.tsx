@@ -130,7 +130,7 @@ const ScatterPlot: React.FC<Props> = (props) => {
                             const rawData = ctx.raw as ScatterDataPoint;
                             const x = rawData.x;
                             const y = rawData.y;
-                            return `Role: ${championData.role}\nWin Delta: ${x.toFixed(2)}% \nPresence: ${y.toFixed(2)}%`;
+                            return `Role: ${championData.role}\nWin Delta: ${y.toFixed(2)}% \nPresence: ${x.toFixed(2)}%`;
                         }
 
                     }
