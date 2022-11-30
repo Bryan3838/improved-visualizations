@@ -135,6 +135,12 @@ const App: React.FC<Props> = (props) => {
               }}
             >Click on a Champion to display more data.</h3>
           }
+
+          <Divider
+            variant="middle"
+            sx={{marginLeft: "5%", marginRight: "5%", marginTop: "20px", marginBottom: "20px"}}
+            flexItem
+          /> 
           
         </div>
       );
