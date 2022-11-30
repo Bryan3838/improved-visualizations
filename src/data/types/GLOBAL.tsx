@@ -5,9 +5,9 @@ export interface GLOBAL {
     tier: string;
     score: string;
     trend: string;
-    "win %": string;
-    "role %": string;
-    "pick %": string;
-    "ban %": string;
+    winRate: number;
+    rolePickRate: number;
+    pickRate: number;
+    banRate: number;
     kda: string;
 }
