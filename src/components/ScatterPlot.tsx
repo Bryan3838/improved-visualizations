@@ -12,16 +12,19 @@ import { Scatter } from "react-chartjs-2";
 import { Champions, DataFiles } from "../data/data";
 import { useState } from "react";
 import Annoation from 'chartjs-plugin-annotation';
+import { GLOBAL } from "../data/types/GLOBAL";
 
 interface Props {
     Patch: string;
     OnChange(championId: string): void;
 }
 
-interface DataElement {
-    roles: Map<string, ScatterDataPoint[]>;
-    pointStyle: PointStyle;
-    championName: string;
+interface ChampionDataSet {
+    label?: string;
+    data: GLOBAL[];
+}
+interface ChampionDataSets {
+    datasets: ChampionDataSet[];
 }
 
 const IMAGE_SIZE = 35;
@@ -38,41 +41,27 @@ const ScatterPlot: React.FC<Props> = (props) => {
     ChartJS.register(...registerables, Annoation);
 
     useEffect(() => {
-        const ChampionRoleData = new Map<string, DataElement>();
+        let sumPickRate = 0;
+        let championCount = 0;
+        const datasets: ChartData<"scatter"> = {
+            datasets: [],
+        };
+        const championDatasets: ChampionDataSets = {
+            datasets: [],
+        }
         const patchData = DataFiles.get(props.Patch)!;
         patchData.forEach((data, name) => {
             const id = Champions.get(name)!;
             const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
             image.src = `http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
-            let dataElement: DataElement = {
-                roles: new Map<string, ScatterDataPoint[]>(),
-                pointStyle: image,
-                championName: name, 
-            };
-            ChampionRoleData.set(id, dataElement);
 
             for (const championData of data) {
                 const dataPoint: ScatterDataPoint = {
                     x: championData.pickRate,
                     y: championData.winRate-50,
                 }
-                
-                const existingRole = dataElement.roles.get(championData.role);
-                if (existingRole) {
-                    existingRole.push(dataPoint);
-                } else {
-                    dataElement.roles.set(championData.role, [dataPoint]);
-                }
-            }
-        });
 
-        let sumPickRate = 0;
-        let championCount = 0;
-        const datasets: ChartData<"scatter"> = {
-            datasets: [],
-        };
-        ChampionRoleData.forEach((element, champion) => {
-            element.roles.forEach((dataPoints, role) => {
+                const role = championData.role;
                 let dataset = datasets.datasets!.find(set => {
                     return set.label === role;
                 });
@@ -82,23 +71,28 @@ const ScatterPlot: React.FC<Props> = (props) => {
                         data: [],
                         pointStyle: [],
                     });
+                    championDatasets.datasets.push({
+                        label: role,
+                        data: [],
+                    })
                 }
                 dataset = datasets.datasets!.find(set => {
                     return set.label === role;
                 });
-                for (const point of dataPoints) {
-                    if (dataset!.label !== role) continue; 
-                    dataset!.data.push(point);
-                    // @ts-ignore
-                    dataset!.pointStyle!.push(element.pointStyle);
+                let championDataset = championDatasets.datasets!.find(set => {
+                    return set.label === role;
+                })
+                dataset!.data.push(dataPoint);
+                // @ts-ignore
+                dataset!.pointStyle!.push(image);
+                championDataset!.data.push(championData);
 
-                    sumPickRate += point.x;
-                    championCount++;
-                }
-            });
+                sumPickRate += championData.pickRate;
+                championCount++;
+            }
         });
-        let avgPickRate = sumPickRate/championCount;
-       
+        const avgPickRate = sumPickRate/championCount;
+
         const options: ChartOptions<"scatter"> = {
             scales: {
                 y: {
@@ -128,15 +122,15 @@ const ScatterPlot: React.FC<Props> = (props) => {
                 tooltip: {
                     callbacks: {
                         label: function(ctx) {
-                            console.log(ctx);
-                            console.log(datasets.datasets[ctx.datasetIndex].data[ctx.dataIndex])
-                            return ctx.label;
+                            const championData = championDatasets.datasets[ctx.datasetIndex].data[ctx.dataIndex];
+                            return championData.name;
                         },
                         afterLabel: function(ctx) {
+                            const championData = championDatasets.datasets[ctx.datasetIndex].data[ctx.dataIndex];
                             const rawData = ctx.raw as ScatterDataPoint;
                             const x = rawData.x;
                             const y = rawData.y;
-                            return `Win Delta: ${x.toFixed(2)}% \nPresence: ${y.toFixed(2)}%`;
+                            return `Role: ${championData.role}\nWin Delta: ${x.toFixed(2)}% \nPresence: ${y.toFixed(2)}%`;
                         }
 
                     }
