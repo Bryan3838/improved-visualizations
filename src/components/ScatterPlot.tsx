@@ -163,20 +163,20 @@ const ScatterPlot: React.FC<Props> = (props) => {
                                 backgroundColor: "rgba(255, 99, 132, 0.3)",
                             }
                         },
-                        label1: {
-                            type: 'label',
-                            position: {
-                                x: "start",
-                                y: "end",
-                            },
-                            content: ["test"],
-                            font: {
-                                size: 18,
-                            },
-                            backgroundColor: 'rgb(245, 245, 245)',
-                            yAdjust: -30,
-                            drawTime: "beforeDatasetsDraw",
-                        }
+                        // label1: {
+                        //     type: 'label',
+                        //     position: {
+                        //         x: "start",
+                        //         y: "end",
+                        //     },
+                        //     content: ["test"],
+                        //     font: {
+                        //         size: 18,
+                        //     },
+                        //     backgroundColor: 'rgb(245, 245, 245)',
+                        //     yAdjust: -30,
+                        //     drawTime: "beforeDatasetsDraw",
+                        // }
                     }
                 }
             },

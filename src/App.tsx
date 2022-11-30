@@ -1,4 +1,4 @@
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Divider, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ScatterPlot from './components/ScatterPlot';
 import { DataFiles, loadData, patchFiles } from './data/data';
@@ -34,7 +34,15 @@ const App: React.FC<Props> = (props) => {
   switch (status) {
     case Status.LOADING:
       return (
-        <div>LOADING</div>
+        <div
+          style={{
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >Loading Champion Data...</div>
       );
     case Status.ERROR:
       return (
@@ -43,40 +51,69 @@ const App: React.FC<Props> = (props) => {
     case Status.SUCCESS:
       return (
         <div className="App">
-          <div>
-            <div>
-              <h1>Select Patch</h1>
-              <Select
-                labelId="patch-ids-label"
-                id="patch-ids"
-                value={patch}
-                onChange={(event: SelectChangeEvent) => {
-                    setPatch(event.target.value);
-                }}
-              >
-                {patchFiles.map((fileName) => (
-                  <MenuItem
-                    key={fileName}
-                    value={fileName}
-                  >
-                    {fileName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            
-            <ScatterPlot
-              Patch={patch}
-              OnChange={championIdSP => {
-                setChampionId(championIdSP);
-              }}
-            />
+          <h1
+            style={{
+              paddingTop: "10px",
+              textAlign: "center",
+              color: "white",
+              fontSize: "30px",
+              backgroundColor: "#2576ce",
+            }}
+          >LOL Vizz</h1>
+          <h3
+            style={{
+              padding: "10px",
+              textAlign: "center",
+              color: "white",
+              fontSize: "15px",
+              backgroundColor: "#2576ce",
+            }}
+          >League of Legends Champion Balancing Visualizations</h3>
 
-            {championId ?
-              <RadarChart Patch={patch} Champion={championId}/> : <h1>Select a Champion</h1>
-            }
-            
-            </div>
+          <Divider
+            variant="middle"
+            sx={{marginLeft: "5%", marginRight: "5%", marginTop: "20px", marginBottom: "20px"}}
+            flexItem
+          /> 
+          
+          <div>
+            <h1>Select Patch</h1>
+            <Select
+              labelId="patch-ids-label"
+              id="patch-ids"
+              value={patch}
+              onChange={(event: SelectChangeEvent) => {
+                  setPatch(event.target.value);
+              }}
+            >
+              {patchFiles.map((fileName) => (
+                <MenuItem
+                  key={fileName}
+                  value={fileName}
+                >
+                  {fileName}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+          
+          <ScatterPlot
+            Patch={patch}
+            OnChange={championIdSP => {
+              setChampionId(championIdSP);
+            }}
+          />
+
+          <Divider
+            variant="middle"
+            sx={{marginLeft: "5%", marginRight: "5%", marginTop: "20px", marginBottom: "20px"}}
+            flexItem
+          /> 
+
+          {championId ?
+            <RadarChart Patch={patch} Champion={championId}/> : null
+          }
+          
         </div>
       );
   }
