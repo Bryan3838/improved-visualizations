@@ -6,12 +6,13 @@ import {
     registerables,
     ScatterDataPoint,
     Tick,
-} from 'chart.js';
+} from "chart.js";
 import { Scatter } from "react-chartjs-2";
-import { Champions, DataFiles } from "../data/data";
+import { DataFiles } from "../data/data";
 import { useState } from "react";
-import Annoation from 'chartjs-plugin-annotation';
-import { GLOBAL } from "../data/types/GLOBAL";
+import Annoation from "chartjs-plugin-annotation";
+import { ChampionData } from "../data/types/ChampionData";
+import { Champions } from "../data/constants/Champions";
 
 interface Props {
     Patch: string;
@@ -20,7 +21,7 @@ interface Props {
 
 interface ChampionDataSet {
     label?: string;
-    data: GLOBAL[];
+    data: ChampionData[];
 }
 interface ChampionDataSets {
     datasets: ChampionDataSet[];

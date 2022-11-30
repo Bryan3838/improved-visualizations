@@ -1,4 +1,4 @@
-export interface GLOBAL {
+export interface ChampionData {
     name: string;
     class: string;
     role: string;

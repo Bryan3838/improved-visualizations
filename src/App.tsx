@@ -1,8 +1,9 @@
-import { Divider, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import ScatterPlot from './components/ScatterPlot';
-import { DataFiles, loadData, patchFiles } from './data/data';
-import RadarChart from './components/RadarChart'
+import { Divider, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import ScatterPlot from "./components/ScatterPlot";
+import { DataFiles, loadData } from "./data/data";
+import RadarChart from "./components/RadarChart";
+import { PatchFiles } from "./data/constants/PatchFiles";
 
 enum Status {
   LOADING,
@@ -16,7 +17,7 @@ interface Props {
 
 const App: React.FC<Props> = (props) => {
   const [championId, setChampionId] = useState<string | undefined>();
-  const [patch, setPatch] = useState(patchFiles[0]);
+  const [patch, setPatch] = useState(PatchFiles[0]);
   const [status, setStatus] = useState(Status.LOADING);
   
   useEffect(() => {
@@ -86,7 +87,7 @@ const App: React.FC<Props> = (props) => {
                   setPatch(event.target.value);
               }}
             >
-              {patchFiles.map((fileName) => (
+              {PatchFiles.map((fileName) => (
                 <MenuItem
                   key={fileName}
                   value={fileName}
