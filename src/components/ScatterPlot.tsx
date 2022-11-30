@@ -6,19 +6,22 @@ import {
     PointStyle,
     registerables,
     ScatterDataPoint,
+    Tick,
 } from 'chart.js';
 import { Scatter } from "react-chartjs-2";
 import { Champions, DataFiles } from "../data/data";
 import { useState } from "react";
+import Annoation from 'chartjs-plugin-annotation';
 
 interface Props {
     Patch: string;
     OnChange(championId: string): void;
 }
 
-interface ChartDataElement {
+interface DataElement {
     roles: Map<string, ScatterDataPoint[]>;
     pointStyle: PointStyle;
+    championName: string;
 }
 
 const IMAGE_SIZE = 35;
@@ -32,21 +35,21 @@ const ScatterPlot: React.FC<Props> = (props) => {
     }
     const [data, setData] = useState({ datasets: emptyDatasets, options: emptyOptions });
 
-    ChartJS.register(...registerables);
+    ChartJS.register(...registerables, Annoation);
 
     useEffect(() => {
-        const ChampionRoleData = new Map<string, ChartDataElement>();
-        
+        const ChampionRoleData = new Map<string, DataElement>();
         const patchData = DataFiles.get(props.Patch)!;
         patchData.forEach((data, name) => {
             const id = Champions.get(name)!;
             const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
             image.src = `http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
-            let chartDataPoint = {
+            let dataElement: DataElement = {
                 roles: new Map<string, ScatterDataPoint[]>(),
                 pointStyle: image,
+                championName: name, 
             };
-            ChampionRoleData.set(id, chartDataPoint);
+            ChampionRoleData.set(id, dataElement);
 
             for (const championData of data) {
                 const dataPoint: ScatterDataPoint = {
@@ -54,20 +57,19 @@ const ScatterPlot: React.FC<Props> = (props) => {
                     y: championData.winRate-50,
                 }
                 
-                const existingRole = chartDataPoint.roles.get(championData.role);
+                const existingRole = dataElement.roles.get(championData.role);
                 if (existingRole) {
                     existingRole.push(dataPoint);
                 } else {
-                    chartDataPoint.roles.set(championData.role, [dataPoint]);
+                    dataElement.roles.set(championData.role, [dataPoint]);
                 }
             }
         });
 
-        // const datasets: ChartData<"scatter"> = {
-        //     datasets: [],
-        // };
+        let sumPickRate = 0;
+        let championCount = 0;
         const datasets: ChartData<"scatter"> = {
-            datasets: []
+            datasets: [],
         };
         ChampionRoleData.forEach((element, champion) => {
             element.roles.forEach((dataPoints, role) => {
@@ -89,25 +91,91 @@ const ScatterPlot: React.FC<Props> = (props) => {
                     dataset!.data.push(point);
                     // @ts-ignore
                     dataset!.pointStyle!.push(element.pointStyle);
+
+                    sumPickRate += point.x;
+                    championCount++;
                 }
             });
         });
+        let avgPickRate = sumPickRate/championCount;
        
         const options: ChartOptions<"scatter"> = {
             scales: {
                 y: {
                     title: {
                         display: true,
-                        text: "Win Delta",
+                        text: "WIN DELTA (IN %)",
+                    },
+                    ticks: {
+                        callback: function(value: string | number, index: number, ticks: Tick[]) {
+                          return `${Number(value).toFixed(2)}%`;
+                        }
                     },
                 },
                 x: {
                     title: {
                         display: true,
-                        text: "Pick Rate %",
+                        text: "PRESENCE (IN %)",
+                    },
+                    ticks: {
+                        callback: function(value: string | number, index: number, ticks: Tick[]) {
+                          return `${Number(value)}%`;
+                        },
                     },
                 },
             },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            console.log(ctx);
+                            console.log(datasets.datasets[ctx.datasetIndex].data[ctx.dataIndex])
+                            return ctx.label;
+                        },
+                        afterLabel: function(ctx) {
+                            const rawData = ctx.raw as ScatterDataPoint;
+                            const x = rawData.x;
+                            const y = rawData.y;
+                            return `Win Delta: ${x.toFixed(2)}% \nPresence: ${y.toFixed(2)}%`;
+                        }
+
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: "line",
+                            yMin: 0,
+                            yMax: 0,
+                            borderColor: "rgba(255, 99, 132, 0.5)",
+                            borderWidth: 2,
+                            drawTime: "beforeDatasetsDraw",
+                        },
+                        line2: {
+                            type: "line",
+                            xMin: avgPickRate,
+                            xMax: avgPickRate,
+                            borderColor: "rgba(255, 99, 132, 0.5)",
+                            borderWidth: 2,
+                            drawTime: "beforeDatasetsDraw",
+                        },
+                        label1: {
+                            type: 'label',
+                            position: {
+                                x: "center",
+                                y: "center",
+                            },
+                            content: ["test"],
+                            font: {
+                                size: 18,
+                            },
+                            backgroundColor: 'rgb(245, 245, 245)',
+                            yAdjust: -30,
+                            drawTime: "beforeDatasetsDraw",
+                        }
+                    }
+                }
+            }
             // elements: {
             //     point: {
             //         hoverRadius: 50,
