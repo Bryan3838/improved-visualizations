@@ -35,7 +35,7 @@ const ScatterPlot: React.FC<Props> = (props) => {
     };
     const emptyOptions: ChartOptions<"scatter"> = {
 
-    }
+    };
     const [data, setData] = useState({ datasets: emptyDatasets, options: emptyOptions });
 
     ChartJS.register(...registerables, Annoation);

@@ -112,7 +112,16 @@ const App: React.FC<Props> = (props) => {
           /> 
 
           {championId ?
-            <RadarChart Patch={patch} Champion={championId}/> : null
+            <RadarChart Patch={patch} Champion={championId}/>
+            :
+            <h3
+              style={{
+                padding: "10px",
+                textAlign: "center",
+                color: "gray",
+                fontSize: "15px",
+              }}
+            >Click on a Champion to display more data.</h3>
           }
           
         </div>
