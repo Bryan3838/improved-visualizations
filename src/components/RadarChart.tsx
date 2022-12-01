@@ -62,7 +62,7 @@ const RadarChart: React.FC<Props> = (props) => {
 
     return (
       <div className="container">
-        <Radar data={data} />;
+        <Radar data={data} />
       </div>
     )
 }

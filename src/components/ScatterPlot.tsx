@@ -196,8 +196,8 @@ const ScatterPlot: React.FC<Props> = (props) => {
     return (
         <div
             style={{
-                width: "75%",
-                height: "75%",
+                width: "100%",
+                height: "100%",
                 margin: "0 auto",
             }}
         >

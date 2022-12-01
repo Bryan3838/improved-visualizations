@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import ScatterPlot from "./components/ScatterPlot";
 import { DataFiles, loadData } from "./data/data";
 import RadarChart from "./components/RadarChart";
+import LineChart from "./components/LineChart";
 import { PatchFiles } from "./data/constants/PatchFiles";
+import { ChartData } from "chart.js";
 
 enum Status {
   LOADING,
@@ -20,6 +22,18 @@ const App: React.FC<Props> = (props) => {
   const [patch, setPatch] = useState(PatchFiles[0]);
   const [status, setStatus] = useState(Status.LOADING);
   
+  const labels = [1, 2, 3, 4, 5, 6, 7];
+  const dataWinrateOverPatch: ChartData<"line"> = {
+    labels: labels,
+    datasets: [{
+      label: 'My First Dataset',
+      data: [65, 59, 80, 81, 56, 55, 40],
+      fill: false,
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }]
+  };
+
   useEffect(() => {
     loadData()
       .then(data => {
@@ -110,12 +124,19 @@ const App: React.FC<Props> = (props) => {
             flexItem
           /> 
           
-          <ScatterPlot
-            Patch={patch}
-            OnChange={championIdSP => {
-              setChampionId(championIdSP);
+          <div
+            style={{
+                width: "75%",
+                margin: "0 auto",
             }}
-          />
+          >
+            <ScatterPlot
+              Patch={patch}
+              OnChange={championIdSP => {
+                setChampionId(championIdSP);
+              }}
+            />
+          </div>
 
           <Divider
             variant="middle"
@@ -124,7 +145,43 @@ const App: React.FC<Props> = (props) => {
           /> 
 
           {championId ?
-            <RadarChart Patch={patch} Champion={championId}/>
+            <div
+              style={{
+                  width: "75%",
+                  margin: "0 auto",
+              }}
+            >
+              <div
+                style={{
+                    width: "30%",
+                    margin: "0 auto",
+                    float: "left",
+                }}
+              >
+                <h1>CHAMPION STATS</h1>
+                <RadarChart Patch={patch} Champion={championId}/>
+              </div>
+
+              <Divider
+                orientation="vertical"
+                variant="middle"
+                sx={{marginLeft: "20px", marginRight: "20px"}}
+              />  
+
+              <div
+                style={{
+                    width: "70%",
+                    height: "70%",
+                    margin: "0 auto",
+                    float: "left",
+                }}
+              >
+                <h1>WINRATE BY PATCH</h1>
+                <LineChart
+                  data={dataWinrateOverPatch}
+                />
+              </div>
+            </div>
             :
             <h3
               style={{
