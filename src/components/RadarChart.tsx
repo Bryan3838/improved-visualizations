@@ -12,8 +12,8 @@ import { Radar } from "react-chartjs-2";
 import "../styles/RadarChart.css"
 
 interface Props {
-    Patch: string;
-    Champion: string;
+    patch: string;
+    champion: string;
 }
 
 interface AnyObject {
@@ -21,8 +21,7 @@ interface AnyObject {
 }
 
 const RadarChart: React.FC<Props> = (props) => {
-
-    const champStats = DataFiles.get(props.Patch)?.get(props.Champion)
+    const champStats = DataFiles.get(props.patch)?.get(props.champion)
     const finalData: Array<any> = []
 
     champStats?.forEach(champion => {
@@ -62,7 +61,8 @@ const RadarChart: React.FC<Props> = (props) => {
 
     return (
       <div className="container">
-        <Radar data={data} />;
+        <h1>CHAMPION STATS</h1>
+        <Radar data={data} />
       </div>
     )
 }

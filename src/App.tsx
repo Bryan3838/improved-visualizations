@@ -4,6 +4,9 @@ import ScatterPlot from "./components/ScatterPlot";
 import { DataFiles, loadData } from "./data/data";
 import RadarChart from "./components/RadarChart";
 import { PatchFiles } from "./data/constants/PatchFiles";
+import { Line } from "react-chartjs-2";
+import { ChartData } from "chart.js";
+import { ChampionData } from "./data/types/ChampionData";
 
 enum Status {
   LOADING,
@@ -15,10 +18,12 @@ interface Props {
 
 }
 
+const LINE_CHART_KEYS: Array<keyof ChampionData> = ["winRate", "pickRate", "banRate"];
+
 const App: React.FC<Props> = (props) => {
-  const [championId, setChampionId] = useState<string | undefined>();
-  const [patch, setPatch] = useState(PatchFiles[0]);
   const [status, setStatus] = useState(Status.LOADING);
+  const [patch, setPatch] = useState(PatchFiles[0]);
+  const [champion, setChampion] = useState<string | undefined>();
   
   useEffect(() => {
     loadData()
@@ -98,7 +103,7 @@ const App: React.FC<Props> = (props) => {
                   key={fileName}
                   value={fileName}
                 >
-                  {fileName}
+                  {`Patch ${fileName.replace(/[a-zA-Z ]/g, "")}`}
                 </MenuItem>
               ))}
             </Select>
@@ -110,12 +115,19 @@ const App: React.FC<Props> = (props) => {
             flexItem
           /> 
           
-          <ScatterPlot
-            Patch={patch}
-            OnChange={championIdSP => {
-              setChampionId(championIdSP);
+          <div
+            style={{
+                width: "75%",
+                margin: "0 auto",
             }}
-          />
+          >
+            <ScatterPlot
+              patch={patch}
+              onChange={championIdSP => {
+                setChampion(championIdSP);
+              }}
+            />
+          </div>
 
           <Divider
             variant="middle"
@@ -123,8 +135,97 @@ const App: React.FC<Props> = (props) => {
             flexItem
           /> 
 
-          {championId ?
-            <RadarChart Patch={patch} Champion={championId}/>
+          {champion ?
+            <div
+              style={{
+                  width: "75%",
+                  margin: "0 auto",
+              }}
+            >
+              <div
+                style={{
+                    width: "30%",
+                    margin: "0 auto",
+                    float: "left",
+                }}
+              >
+                <RadarChart patch={patch} champion={champion}/>
+                {/* {DataFiles.get(patch)!.get(champion)!.map(championData => {
+                  for (const key in championData) {
+                    return (
+                      <div>{key}</div>
+                    );
+                  }
+                  return null;
+                })} */}
+              </div>
+
+              <div
+                style={{
+                    width: "70%",
+                    height: "70%",
+                    margin: "0 auto",
+                    float: "left",
+                }}
+              >
+                {LINE_CHART_KEYS.map(key => {
+                  function average(array: number[]) {
+                    return array.reduce((a, b) => a + b) / array.length;
+                  }
+
+                  const datasets: ChartData<"line"> = {
+                    labels: [],
+                    datasets: [{
+                      data: []
+                    }]
+                  };
+                  PatchFiles.forEach(patch => {
+                    datasets.labels!.push(`Patch ${patch.replace(/[a-zA-Z ]/g, "")}`);
+                    const patchData = DataFiles.get(patch)!;
+                    patchData.forEach((data, name) => {
+                      if (name === champion) {
+                        const averageValue = average(data.map(championData => championData[key] as number));
+                        datasets.datasets[0]!.data.push(averageValue);
+                      }
+                    });
+                  });
+                  
+                  const averageValueOverPatches = average(datasets.datasets[0]!.data.map(x => x as number));
+                  return (
+                    <div>
+                      <h1>{key.toUpperCase()} BY PATCH</h1>
+                      <Line
+                        data={datasets}
+                        options={{
+                          plugins: {
+                            legend: {
+                              display: false,
+                            },
+                            annotation: {
+                              annotations: {
+                                avgValue: {
+                                  type: "line",
+                                  yMin: averageValueOverPatches,
+                                  yMax: averageValueOverPatches,
+                                  borderColor: "rgba(255, 99, 132, 0.5)",
+                                  borderWidth: 2,
+                                  drawTime: "afterDatasetsDraw",
+                                  label: {
+                                      display: true,
+                                      content: `AVERAGE ${key.toUpperCase()}`,
+                                      backgroundColor: "rgba(255, 99, 132, 0.4)",
+                                  }
+                                },
+                              }
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
             :
             <h3
               style={{

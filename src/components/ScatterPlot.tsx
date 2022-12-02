@@ -15,8 +15,8 @@ import { ChampionData } from "../data/types/ChampionData";
 import { Champions } from "../data/constants/Champions";
 
 interface Props {
-    Patch: string;
-    OnChange(championId: string): void;
+    patch: string;
+    onChange(championId: string): void;
 }
 
 interface ChampionDataSet {
@@ -49,7 +49,7 @@ const ScatterPlot: React.FC<Props> = (props) => {
         const championDatasets: ChampionDataSets = {
             datasets: [],
         }
-        const patchData = DataFiles.get(props.Patch)!;
+        const patchData = DataFiles.get(props.patch)!;
         patchData.forEach((data, name) => {
             const id = Champions.get(name)!;
             const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
@@ -146,8 +146,8 @@ const ScatterPlot: React.FC<Props> = (props) => {
                             drawTime: "afterDatasetsDraw",
                             label: {
                                 display: true,
-                                content: "Ideal Win Delta",
-                                backgroundColor: "rgba(255, 99, 132, 0.3)",
+                                content: "IDEAL WIN DELTA",
+                                backgroundColor: "rgba(255, 99, 132, 0.4)",
                             }
                         },
                         avgPresenceLine: {
@@ -159,9 +159,9 @@ const ScatterPlot: React.FC<Props> = (props) => {
                             drawTime: "afterDatasetsDraw",
                             label: {
                                 display: true,
-                                content: "Average Presence",
+                                content: "AVERAGE PRESENSE",
                                 rotation: -90,
-                                backgroundColor: "rgba(255, 99, 132, 0.3)",
+                                backgroundColor: "rgba(255, 99, 132, 0.4)",
                             }
                         },
                         // label1: {
@@ -186,18 +186,19 @@ const ScatterPlot: React.FC<Props> = (props) => {
                     const datasetIndex = element[0].datasetIndex;
                     const dataIndex = element[0].index;
                     const championData = championDatasets.datasets[datasetIndex].data[dataIndex];
-                    props.OnChange(championData.name);
+                    props.onChange(championData.name);
                 }
             }
         }
+        
         setData({ datasets: datasets, options: options});
-    }, [props, props.Patch]);
+    }, [props, props.patch]);
 
     return (
         <div
             style={{
-                width: "75%",
-                height: "75%",
+                width: "100%",
+                height: "100%",
                 margin: "0 auto",
             }}
         >
