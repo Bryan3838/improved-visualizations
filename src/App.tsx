@@ -193,7 +193,7 @@ const App: React.FC<Props> = (props) => {
                   const averageValueOverPatches = average(datasets.datasets[0]!.data.map(x => x as number));
                   return (
                     <div>
-                      <h1>{key.toUpperCase()} BY PATCH</h1>
+                      <h1>{key.toUpperCase()} OVER PATCHES</h1>
                       <Line
                         data={datasets}
                         options={{
