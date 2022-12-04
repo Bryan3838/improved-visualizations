@@ -5,7 +5,7 @@ import { DataFiles, loadData } from "./data/data";
 import RadarChart from "./components/RadarChart";
 import { PatchFiles } from "./data/constants/PatchFiles";
 import { Line } from "react-chartjs-2";
-import { ChartData } from "chart.js";
+import { ChartData, Tick } from "chart.js";
 import { ChampionData } from "./data/types/ChampionData";
 
 enum Status {
@@ -197,6 +197,25 @@ const App: React.FC<Props> = (props) => {
                       <Line
                         data={datasets}
                         options={{
+                          scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: `${key.toUpperCase()} (IN %)`,
+                                },
+                                ticks: {
+                                    callback: function(value: string | number, index: number, ticks: Tick[]) {
+                                      return `${Number(value).toFixed(2)}%`;
+                                    }
+                                },
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "PATCH",
+                                },
+                            },
+                        },
                           plugins: {
                             legend: {
                               display: false,
