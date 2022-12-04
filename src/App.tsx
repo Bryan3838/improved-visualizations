@@ -189,6 +189,8 @@ const App: React.FC<Props> = (props) => {
                       }
                     });
                   });
+                  datasets.datasets[0]!.data.reverse();
+                  datasets.labels!.reverse();
                   
                   const averageValueOverPatches = average(datasets.datasets[0]!.data.map(x => x as number));
                   return (
