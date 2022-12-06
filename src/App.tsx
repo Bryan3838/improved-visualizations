@@ -7,7 +7,6 @@ import { PatchFiles } from "./data/constants/PatchFiles";
 import { Line } from "react-chartjs-2";
 import { ChartData, Tick } from "chart.js";
 import { ChampionData } from "./data/types/ChampionData";
-import { Champions, ChampionsKey } from "./data/constants/Champions";
 
 enum Status {
   LOADING,
@@ -30,7 +29,7 @@ const App: React.FC<Props> = (props) => {
   useEffect(() => {
     loadData()
       .then(data => {
-        console.log(DataFiles);
+        // console.log(DataFiles);
         setStatus(Status.SUCCESS);
       })
       .catch(error => {
@@ -153,7 +152,7 @@ const App: React.FC<Props> = (props) => {
               >
                 <h1>{champion.toUpperCase()}</h1>
                 <img
-                  src={getChampionIconLink(Champions[champion as ChampionsKey])}
+                  src={getChampionIconLink(champion)}
                   alt="Champion"
                   style={{
                     height: "50%",

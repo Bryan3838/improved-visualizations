@@ -1,3 +1,4 @@
+import { Champions, ChampionsKey } from "./constants/Champions";
 import { PatchFiles } from "./constants/PatchFiles";
 import { ChampionData } from "./types/ChampionData";
 
@@ -54,6 +55,10 @@ export const loadData = async () => {
     }
 }
 
-export function getChampionIconLink(championId: string) {
-    return `https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${championId}.png`;
+export function getChampionIconLink(champion: string) {
+    const id = Champions[champion as ChampionsKey];
+    if (!id) {
+        console.error("No id found for:", champion);
+    }
+    return `https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
 }

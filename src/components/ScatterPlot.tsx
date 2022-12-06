@@ -12,7 +12,6 @@ import { DataFiles, getChampionIconLink } from "../data/data";
 import { useState } from "react";
 import Annoation from "chartjs-plugin-annotation";
 import { ChampionData } from "../data/types/ChampionData";
-import { Champions, ChampionsKey } from "../data/constants/Champions";
 
 interface Props {
     patch: string;
@@ -51,13 +50,8 @@ const ScatterPlot: React.FC<Props> = (props) => {
         }
         const patchData = DataFiles.get(props.patch)!;
         patchData.forEach((data, name) => {
-            const id = Champions[name as ChampionsKey];
-            if (!id) {
-                console.warn("No id found for:", name);
-                return;
-            }
             const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
-            image.src = getChampionIconLink(id);
+            image.src = getChampionIconLink(name);
 
             for (const championData of data) {
                 const dataPoint: ScatterDataPoint = {
