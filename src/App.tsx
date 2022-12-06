@@ -153,7 +153,7 @@ const App: React.FC<Props> = (props) => {
               >
                 <h1>{champion.toUpperCase()}</h1>
                 <img
-                  src={`http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${Champions.get(champion)}.png`}
+                  src={`https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${Champions.get(champion)}.png`}
                   alt="Champion"
                   style={{
                     height: "50%",

@@ -1,4 +1,5 @@
 export const PatchFiles = [
+    'League of Legends Champion Stats 12.21',
     'League of Legends Champion Stats 12.20',
     'League of Legends Champion Stats 12.19',
     'League of Legends Champion Stats 12.18',

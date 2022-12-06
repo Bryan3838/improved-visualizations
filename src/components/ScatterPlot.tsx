@@ -52,8 +52,12 @@ const ScatterPlot: React.FC<Props> = (props) => {
         const patchData = DataFiles.get(props.patch)!;
         patchData.forEach((data, name) => {
             const id = Champions.get(name)!;
+            if (!id) {
+                console.warn("No id found for:", name);
+                return;
+            }
             const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
-            image.src = `http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
+            image.src = `https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
 
             for (const championData of data) {
                 const dataPoint: ScatterDataPoint = {

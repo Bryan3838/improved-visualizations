@@ -63,6 +63,7 @@ export const Champions = new Map<string, string>([
     ["Kindred", "Kindred"],
     ["Kled", "Kled"],
     ["Kog'Maw", "KogMaw"],
+    ["K'Sante", "KSante"],
     ["LeBlanc", "Leblanc"],
     ["Lee Sin", "LeeSin"],
     ["Leona", "Leona"],
