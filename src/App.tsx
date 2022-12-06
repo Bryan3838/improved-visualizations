@@ -19,6 +19,7 @@ interface Props {
 }
 
 const LINE_CHART_KEYS: Array<keyof ChampionData> = ["winRate", "pickRate", "banRate"];
+const STAT_KEYS: Array<keyof ChampionData> = ["tier", "role", "rolePickRate", "class", "kda", "score", "trend"];
 
 const App: React.FC<Props> = (props) => {
   const [status, setStatus] = useState(Status.LOADING);
@@ -150,14 +151,24 @@ const App: React.FC<Props> = (props) => {
                 }}
               >
                 <RadarChart patch={patch} champion={champion}/>
-                {/* {DataFiles.get(patch)!.get(champion)!.map(championData => {
-                  for (const key in championData) {
-                    return (
-                      <div>{key}</div>
-                    );
-                  }
-                  return null;
-                })} */}
+                {DataFiles.get(patch)!.get(champion)!.map(championData => {
+                  return (
+                    <div>
+                      <Divider
+                        variant="middle"
+                        sx={{marginLeft: "5%", marginRight: "5%", marginTop: "20px", marginBottom: "20px"}}
+                        flexItem
+                      /> 
+                      {STAT_KEYS.map(key => {
+                        return (
+                          <div>
+                            <b>{(key.charAt(0).toUpperCase() + key.slice(1)).replace(/[A-Z]/g, ' $&').trim()}:</b> {championData[key]}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )
+                })}
               </div>
 
               <div
