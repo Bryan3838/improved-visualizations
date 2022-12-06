@@ -7,7 +7,7 @@ import { PatchFiles } from "./data/constants/PatchFiles";
 import { Line } from "react-chartjs-2";
 import { ChartData, Tick } from "chart.js";
 import { ChampionData } from "./data/types/ChampionData";
-import { ChampionsKey } from "./data/constants/Champions";
+import { Champions, ChampionsKey } from "./data/constants/Champions";
 
 enum Status {
   LOADING,
@@ -153,7 +153,7 @@ const App: React.FC<Props> = (props) => {
               >
                 <h1>{champion.toUpperCase()}</h1>
                 <img
-                  src={getChampionIconLink(champion as ChampionsKey)}
+                  src={getChampionIconLink(Champions[champion as ChampionsKey])}
                   alt="Champion"
                   style={{
                     height: "50%",
