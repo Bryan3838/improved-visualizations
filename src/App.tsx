@@ -7,6 +7,7 @@ import { PatchFiles } from "./data/constants/PatchFiles";
 import { Line } from "react-chartjs-2";
 import { ChartData, Tick } from "chart.js";
 import { ChampionData } from "./data/types/ChampionData";
+import { Champions } from "./data/constants/Champions";
 
 enum Status {
   LOADING,
@@ -150,6 +151,21 @@ const App: React.FC<Props> = (props) => {
                     float: "left",
                 }}
               >
+                <h1>{champion.toUpperCase()}</h1>
+                <img
+                  src={`http://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${Champions.get(champion)}.png`}
+                  alt="Champion"
+                  style={{
+                    height: "50%",
+                    width: "50%"
+                }}/>
+
+                <Divider
+                  variant="middle"
+                  sx={{marginLeft: "5%", marginRight: "5%", marginTop: "20px", marginBottom: "20px"}}
+                  flexItem
+                /> 
+                
                 <RadarChart patch={patch} champion={champion}/>
                 {DataFiles.get(patch)!.get(champion)!.map(championData => {
                   return (
