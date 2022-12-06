@@ -1,13 +1,13 @@
 import { Divider, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ScatterPlot from "./components/ScatterPlot";
-import { DataFiles, loadData } from "./data/data";
+import { DataFiles, getChampionIconLink, loadData } from "./data/data";
 import RadarChart from "./components/RadarChart";
 import { PatchFiles } from "./data/constants/PatchFiles";
 import { Line } from "react-chartjs-2";
 import { ChartData, Tick } from "chart.js";
 import { ChampionData } from "./data/types/ChampionData";
-import { Champions } from "./data/constants/Champions";
+import { ChampionsKey } from "./data/constants/Champions";
 
 enum Status {
   LOADING,
@@ -153,7 +153,7 @@ const App: React.FC<Props> = (props) => {
               >
                 <h1>{champion.toUpperCase()}</h1>
                 <img
-                  src={`https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${Champions.get(champion)}.png`}
+                  src={getChampionIconLink(champion as ChampionsKey)}
                   alt="Champion"
                   style={{
                     height: "50%",

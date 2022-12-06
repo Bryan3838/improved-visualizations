@@ -8,11 +8,11 @@ import {
     Tick,
 } from "chart.js";
 import { Scatter } from "react-chartjs-2";
-import { DataFiles } from "../data/data";
+import { DataFiles, getChampionIconLink } from "../data/data";
 import { useState } from "react";
 import Annoation from "chartjs-plugin-annotation";
 import { ChampionData } from "../data/types/ChampionData";
-import { Champions } from "../data/constants/Champions";
+import { Champions, ChampionsKey } from "../data/constants/Champions";
 
 interface Props {
     patch: string;
@@ -51,13 +51,13 @@ const ScatterPlot: React.FC<Props> = (props) => {
         }
         const patchData = DataFiles.get(props.patch)!;
         patchData.forEach((data, name) => {
-            const id = Champions.get(name)!;
+            const id = Champions[name as ChampionsKey];
             if (!id) {
                 console.warn("No id found for:", name);
                 return;
             }
             const image = new Image(IMAGE_SIZE, IMAGE_SIZE);
-            image.src = `https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${id}.png`;
+            image.src = getChampionIconLink(id);
 
             for (const championData of data) {
                 const dataPoint: ScatterDataPoint = {

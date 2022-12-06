@@ -53,3 +53,7 @@ export const loadData = async () => {
         DataFiles.set(patchFile, championMap);
     }
 }
+
+export function getChampionIconLink(championId: string) {
+    return `https://ddragon.leagueoflegends.com/cdn/12.22.1/img/champion/${championId}.png`;
+}
