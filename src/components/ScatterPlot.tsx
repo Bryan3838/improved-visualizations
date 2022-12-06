@@ -27,7 +27,7 @@ interface ChampionDataSets {
     datasets: ChampionDataSet[];
 }
 
-const IMAGE_SIZE = 35;
+const IMAGE_SIZE = 30;
 
 const ScatterPlot: React.FC<Props> = (props) => {
     const emptyDatasets: ChartData<"scatter"> = {
